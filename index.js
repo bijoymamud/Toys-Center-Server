@@ -40,6 +40,9 @@ async function run() {
     //setting data on mongodb
     const db = client.db("toyCorner");
     const toyInformationCollection = db.collection("toyinfo")
+
+    const dataBase = client.db('toyCorner');
+    const showDataCollection = dataBase.collection("loadedData")
     // const toyInformationCollection = client.db('toyCorner').collection('toyinfo')
 
 
@@ -53,7 +56,11 @@ async function run() {
     });
 
 
-
+    app.get('/toyinfo', async (req, res) => {
+      const cursor = toyInformationCollection.find();
+      const result = await cursor.toArray();
+      res.send(result);
+    })
 
 
 
