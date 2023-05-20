@@ -67,10 +67,16 @@ async function run() {
     app.get("/toyinfo/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
+
+
+
       const result = await toyInformationCollection.findOne(query);
       res.send(result);
 
     })
+
+
+    //find by email address
 
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
