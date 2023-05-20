@@ -75,6 +75,14 @@ async function run() {
 
     })
 
+    //for delete
+    app.delete("/toyinfo/:id", async (req, res) => {
+      const id = req.params.id;
+      const query = { _id: new ObjectId(id) };
+      const result = await toyInformationCollection.deleteOne(query);
+      res.send(result);
+    })
+
     app.get("/toyEmail/:email", async (req, res) => {
       console.log(req.params.id);
       const jobs = await toyInformationCollection
