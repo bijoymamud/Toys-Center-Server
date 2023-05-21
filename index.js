@@ -75,11 +75,47 @@ async function run() {
 
     })
 
+    // for search
+    // const indexKeys = { category: 1 };
+    // const indexOptions = { name: "category" };
+    // const result = await toyInformationCollection.createIndex(indexKeys, indexOptions);
+    // console.log(result);
+
+    app.get("/getToysByText/:text", async (req, res) => {
+      const text = req.params.text;
+      const result = await toyInformationCollection
+        .find({
+          $or: [
+            { title: { $regex: text, $options: "i" } },
+            { category: { $regex: text, $options: "i" } },
+          ],
+        })
+        .toArray();
+      res.send(result);
+    });
+
+
+
     //for delete
     app.delete("/toyinfo/:id", async (req, res) => {
       const id = req.params.id;
       const query = { _id: new ObjectId(id) };
       const result = await toyInformationCollection.deleteOne(query);
+      res.send(result);
+    })
+
+    //for update
+    app.patch("/toyinfo/:id", async (req, res) => {
+      const id = req.params.id;
+      const filter = { _id: new ObjectId(id) }
+      const updateToyInfo = req.body;
+      console.log(updateToyInfo);
+      const updateDoc = {
+        $set: {
+          status: updateToyInfo.status
+        }
+      }
+      const result = await toyInformationCollection.updateOne(filter, updateDoc);
       res.send(result);
     })
 
