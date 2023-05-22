@@ -105,25 +105,35 @@ async function run() {
     })
 
     //for update
-    app.patch("/toyinfo/:id", async (req, res) => {
+    app.put("/toyinfo/:id", async (req, res) => {
       const id = req.params.id;
-      const filter = { _id: new ObjectId(id) }
-      const updateToyInfo = req.body;
-      console.log(updateToyInfo);
+      console.log(id);
+      // console.log(body);
+      const filter = { _id: new ObjectId(id) };
+      const option = { upsert: true }
+      const body = req.body;
+      console.log(body);
       const updateDoc = {
         $set: {
-          status: updateToyInfo.status
-        }
-      }
-      const result = await toyInformationCollection.updateOne(filter, updateDoc);
+          price: body.price,
+          quantity: body.quantity,
+          description: body.description,
+        },
+      };
+
+      const result = await toyInformationCollection.updateOne(filter, updateDoc, option);
       res.send(result);
-    })
+      // console.log(result);
+    });
+
 
     app.get("/toyEmail/:email", async (req, res) => {
       console.log(req.params.id);
       const jobs = await toyInformationCollection
         .find({
           email: req.params.email,
+        }).sort({
+          price: 1
         })
         .toArray();
       res.send(jobs);
